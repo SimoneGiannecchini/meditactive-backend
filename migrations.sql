@@ -1,0 +1,39 @@
+CREATE DATABASE IF NOT EXISTS meditactive;
+
+USE meditactive;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  coins INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE goals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  coins_reward INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE goal_intervals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE interval_goals (
+  interval_id INT NOT NULL,
+  goal_id INT NOT NULL,
+  completed BOOLEAN NOT NULL DEFAULT FALSE,
+  completed_at DATETIME NULL,
+  PRIMARY KEY (interval_id, goal_id),
+  FOREIGN KEY (interval_id) REFERENCES goal_intervals(id) ON DELETE CASCADE,
+  FOREIGN KEY (goal_id) REFERENCES goals(id) ON DELETE CASCADE
+);
